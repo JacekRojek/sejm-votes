@@ -1,4 +1,4 @@
-import json, math
+import math
 from PIL import Image, ImageDraw
 from matplotlib.pylab import get_cmap
 import backend.models as m

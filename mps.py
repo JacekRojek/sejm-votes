@@ -1,8 +1,14 @@
 import requests
 from bs4 import BeautifulSoup as bs
-from backend.models import Deputy, split_name
+from backend.models import split_name
+import pandas as pd
 
 letters = ["A", "B"]
+
+parties = []
+first_names = []
+last_names = []
+
 
 for page_letter in letters:
   res = requests.get("http://sejm.gov.pl/Sejm9.nsf/poslowie.xsp?type={}".format(page_letter))
@@ -16,13 +22,12 @@ for page_letter in letters:
       party = mp.find("div", "deputy-box-details").find("strong").text
 
       first_name, last_name = split_name(name)
-      try:
-        deputy = Deputy.select().where((Deputy.first_name==first_name) & (Deputy.last_name==last_name)).get()
-        if (deputy.party != party):
-          print("Updating information about {} {}".format(first_name, last_name))
-        deputy.party = party
-        deputy.save()
-      except:
-        print("Creating deputy {} {}".format(first_name, last_name))
-        deputy = Deputy(first_name=first_name, last_name=last_name, party=party)
-        deputy.save()
+      first_names.append(first_name)
+      last_names.append(last_name)
+      parties.append(party)
+
+      print("Updating information about {} {} {}".format(first_name, last_name, party))
+
+df = pd.DataFrame({'first_name': first_names, 'last_name': last_name, 'party': parties})
+print(df)
+df.to_csv('mps.csv')

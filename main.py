@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup as bs
-import json
 import backend.models as m
 import datetime
 
@@ -25,21 +24,16 @@ for all_votes_link in all_days_soup.find('tbody').findAll('a'):
     date = header[3].split("-")
     sitting_number = int(header[6][:-1])
     sitting = None
-    try:
-        sitting = m.Sitting.get(m.Sitting.number == sitting_number)
-    except:
-        print("Creating sitting with number {}".format(sitting_number))
-        sitting = m.Sitting(number=sitting_number)
-        sitting.save()
+
+    # TODO: add sitting
+    print("Creating sitting with number {}".format(sitting_number))
     
     day = None
     date_formatted = datetime.date(int(date[2]), int(date[1]), int(date[0]))
-    try:
-        day = m.Day.get(m.Day.date == date_formatted)
-    except:
-        print("Creating new day: {}".format(".".join(date)))
-        day = m.Day(date=date_formatted, sitting=sitting)
-        day.save()
+
+    # TODO: add date_formatted
+    print("Creating new day: {}".format(".".join(date)))
+
     
     for row in all_votes_soup.find("tbody").findAll('tr'):
         vote_row = row.find("td", class_="left")
@@ -84,8 +78,9 @@ for all_votes_link in all_days_soup.find('tbody').findAll('a'):
             print("Creating vote with number {}...".format(vote_number))
             time = row.findAll("td")[1].text.split(":")
             time_formatted = datetime.time(int(time[0]), int(time[1]), int(time[2]))
-            vote = m.Vote(day=day, title=title, number=vote_number, total_votes=total, time=time_formatted)
-            vote.save()
+
+            # TODO: add vote
+            print("Vote: ", day, title, vote_number, total, time_formatted)
 
         should_pass = True
         for cell in list(all_cells):
@@ -114,10 +109,5 @@ for all_votes_link in all_days_soup.find('tbody').findAll('a'):
                     quit(-1)
 
                 vote_result = None
-                try:
-                    vote_result = m.Result.get((m.Result.deputy == deputy) & (m.Result.vote == vote))
-                    vote_result.result = result_value
-                    vote_result.save()
-                except:
-                    vote_result = m.Result(result=result_value, vote=vote, deputy=deputy)
-                    vote_result.save()
+                # TODO: add result
+                print("Vote: ", result_value, vote, deputy)
