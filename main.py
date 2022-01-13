@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import backend.models as m
 import datetime
+import pandas as pd
 
 vote_results_values = {
     "Za": 1,
@@ -10,6 +11,7 @@ vote_results_values = {
     "Nieobecny": -2,
 }
 
+deputies = pd.read_csv('mps.csv')
 base_link = 'http://www.sejm.gov.pl/Sejm9.nsf/'
 
 all_days_page = requests.get(base_link + 'agent.xsp?symbol=posglos&NrKadencji=9')
@@ -101,12 +103,9 @@ for all_votes_link in all_days_soup.find('tbody').findAll('a'):
 
                 first_name, last_name = m.split_name(name)
                 deputy = None
-                try:
-                    deputy = m.Deputy.get((m.Deputy.first_name == first_name) & (m.Deputy.last_name == last_name))
-                except:
-                    print("No deputy with name {} {} found.".format(first_name, last_name))
-                    print("Perhaps you forgot to run mps.py first?")
-                    quit(-1)
+                deputy = deputies[(deputies['first_name'] == first_name) & (deputies['last_name'] == last_name)]
+                print('deputy')
+                print(deputy)
 
                 vote_result = None
                 # TODO: add result

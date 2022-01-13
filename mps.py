@@ -28,6 +28,6 @@ for page_letter in letters:
 
       print("Updating information about {} {} {}".format(first_name, last_name, party))
 
-df = pd.DataFrame({'first_name': first_names, 'last_name': last_name, 'party': parties})
+df = pd.DataFrame({'first_name': first_names, 'last_name': last_names, 'party': parties})
 print(df)
 df.to_csv('mps.csv')
