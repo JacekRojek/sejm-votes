@@ -93,8 +93,6 @@ for all_votes_link in all_days_soup.find('tbody').findAll('a'):
             party_results_page = bs(requests.get(base_link + party_results_link["href"]).content, 'html.parser')
             try:
                 all_results_cells = list(party_results_page.find("tbody").findAll("td", "left"))
-                if 'Korwin' in all_results_cells:
-                    print('results page')
             except:
                 should_pass = False
                 break
