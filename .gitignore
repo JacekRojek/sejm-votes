@@ -127,3 +127,5 @@ dmypy.json
 *.png
 *.psd
 draft.py
+sejm_lxml.ipynb
+sejm.ipynb
